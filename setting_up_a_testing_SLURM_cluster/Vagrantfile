@@ -1,0 +1,40 @@
+#Define the list of machines
+slurm_cluster = {
+    :controller => {
+        :hostname => "controller",
+        :ipaddress => "10.10.10.1"
+    },
+    :server => {                                                              
+        :hostname => "server",
+        :ipaddress => "10.10.10.2"
+    }
+}
+
+#Provisioning inline script
+$script = <<SCRIPT
+apt-get update
+apt-get install -y -q vim slurm-llnl
+echo "10.10.10.1    controller" >> /etc/hosts
+echo "10.10.10.2    server" >> /etc/hosts
+
+SCRIPT
+
+Vagrant.configure("2") do |global_config|
+    slurm_cluster.each_pair do |name, options|
+        global_config.vm.define name do |config|
+            #VM configurations
+            config.vm.box = "precise64"
+            config.vm.hostname = "#{name}"
+            config.vm.network :private_network, ip: options[:ipaddress]
+
+            #VM specifications
+            config.vm.provider :virtualbox do |v|
+                v.customize ["modifyvm", :id, "--memory", "512"]
+            end
+
+            #VM provisioning
+            config.vm.provision :shell,
+                :inline => $script
+        end
+    end
+end
