@@ -16,7 +16,8 @@ apt-get update
 apt-get install -y -q vim slurm-llnl
 echo "10.10.10.1    controller" >> /etc/hosts
 echo "10.10.10.2    server" >> /etc/hosts
-
+wget https://raw.github.com/guillermo-carrasco/mussolblog/master/setting_up_a_testing_SLURM_cluster/slurm.conf
+mv slurm.conf /etc/slurm-llnl/
 SCRIPT
 
 Vagrant.configure("2") do |global_config|
