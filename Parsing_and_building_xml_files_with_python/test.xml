@@ -1,0 +1,8 @@
+<Languages>
+    <Python typing="duck" version="2.7">
+        <Properties cross-platform="yes" typing="duck" />
+        <Projects>
+            <Django type="Web Framework" />
+        </Projects>
+    </Python>
+</Languages>
