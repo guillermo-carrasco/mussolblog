@@ -7,11 +7,11 @@ and upload each twitter to a CouchDB instance.
 import ConfigParser
 import os
 import twitter
+import couchdb
 
 def get_config():
     """Return an object ConfigParser.
     """
-
     conf_file = os.path.join(os.environ['HOME'], '.pytwitterrc')
 
     if not os.path.exists(conf_file):
@@ -25,7 +25,6 @@ def get_config():
 def load_twitter_credentials():
     """Return twitter credentials read from ~/.pytwitterrc
     """
-
     conf = get_config()
     try:
         credentials = dict(conf.items('API'))
@@ -45,7 +44,6 @@ def load_twitter_credentials():
 def load_couchdb_credentials():
     """Return couchdb credentials read from .pytwitterrc
     """
-
     conf = get_config()
     try:
         credentials = dict(conf.items('couchdb'))
@@ -70,6 +68,14 @@ auth = twitter.oauth.OAuth(credentials.get('access_key'),
                            credentials.get('customer_secret'))
 
 twitter_api = twitter.Twitter(auth=auth)
+
+#Create a connection to couchDB, where we will store the tweets
+credentials = load_couchdb_credentials()
+couch = couchdb.Server("{database}:{port}/".format(
+                                        database = credentials.get('database'),
+                                        port = credentials.get('port')))
+couch.resource.credentials = (credentials.get('user'), credentials.get('password'))
+tweets_db = couch['tweets']
 
 #XXX: Parse arguments to let the user decide the interval time for polling and the
 #duration of it (i.e poll every minute during 1h/1d/1w)
