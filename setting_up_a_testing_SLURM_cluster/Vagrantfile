@@ -2,11 +2,11 @@
 slurm_cluster = {
     :controller => {
         :hostname => "controller",
-        :ipaddress => "10.10.10.1"
+        :ipaddress => "10.10.10.3"
     },
     :server => {                                                              
         :hostname => "server",
-        :ipaddress => "10.10.10.2"
+        :ipaddress => "10.10.10.4"
     }
 }
 
